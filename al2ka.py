@@ -44,7 +44,7 @@ def main():
     """Entry point"""
     volumes = []
 
-    with open("json/Bakuman.json", "r", encoding="utf8") as file:
+    with open("json/HellParadise.json", "r", encoding="utf8") as file:
         contents = file.read()
         jayson = json.loads(contents)
         mediaid = jayson["id"]
