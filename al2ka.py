@@ -44,7 +44,7 @@ def main():
     """Entry point"""
     volumes = []
 
-    with open("json/OnePunch.json", "r", encoding="utf8") as file:
+    with open("json/IDInvaded.json", "r", encoding="utf8") as file:
         contents = file.read()
         jayson = json.loads(contents)
         mediaid = jayson["id"]
@@ -57,7 +57,7 @@ def main():
 
     json_dict = response.json()
     activities = json_dict["data"]["Page"]["activities"]
-    print(activities)
+
     results = []
     for i, volume in enumerate(volumes):
         volume_start = volume["start"]
