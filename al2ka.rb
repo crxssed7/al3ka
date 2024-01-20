@@ -57,7 +57,7 @@ def create_read_issues(kaboom_id, results)
         result = results[index]
         next unless result
         read_at = result[:finished_reading]
-        ris << ReadIssue.create(user:, issue:, read_at: )
+        ris << ReadIssue.new(user:, issue:, read_at: )
     end
     ris
 end
@@ -65,8 +65,8 @@ end
 def main
     volumes = []
 
-    kaboom_id = 53
-    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Blame.json")
+    kaboom_id = 56
+    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Saiki.json")
     response = Net::HTTP.get_response(uri)
     return unless response.is_a? Net::HTTPSuccess
 
