@@ -57,7 +57,7 @@ def create_read_issues(kaboom_id, results)
         result = results[index]
         next unless result
         read_at = result[:finished_reading]
-        ris << ReadIssue.new(user:, issue:, read_at: )
+        ris << ReadIssue.create(user:, issue:, read_at: )
     end
     ris
 end
@@ -130,7 +130,9 @@ def main
             end
         end
 
-        results << {volume: index + 1, started_reading: Time.at(started_reading).utc, finished_reading: Time.at(finished_reading).utc}
+        if started_reading != nil && finished_reading != nil
+            results << {volume: index + 1, started_reading: Time.at(started_reading).utc, finished_reading: Time.at(finished_reading).utc}
+        end
     end
 
     create_read_issues(kaboom_id, results)

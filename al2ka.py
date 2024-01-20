@@ -44,7 +44,7 @@ def main():
     """Entry point"""
     volumes = []
 
-    with open("json/Saiki.json", "r", encoding="utf8") as file:
+    with open("json/Kaguya.json", "r", encoding="utf8") as file:
         contents = file.read()
         jayson = json.loads(contents)
         mediaid = jayson["id"]
@@ -101,7 +101,8 @@ def main():
                 elif created > finished_reading:
                     finished_reading = created
 
-        results.append({"volume": i + 1, "started_reading": started_reading, "finished_reading": finished_reading})
+        if started_reading is not None and finished_reading is not None:
+            results.append({"volume": i + 1, "started_reading": started_reading, "finished_reading": finished_reading})
 
     for r in results:
         volume = r["volume"]
