@@ -44,7 +44,7 @@ def main():
     """Entry point"""
     volumes = []
 
-    with open("json/MobPsycho.json", "r", encoding="utf8") as file:
+    with open("json/Nausicaa.json", "r", encoding="utf8") as file:
         contents = file.read()
         jayson = json.loads(contents)
         mediaid = jayson["id"]
