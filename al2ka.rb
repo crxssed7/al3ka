@@ -65,8 +65,8 @@ end
 def main
     volumes = []
 
-    kaboom_id = 64
-    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Barakamon.json")
+    kaboom_id = 26
+    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Hina.json")
     response = Net::HTTP.get_response(uri)
     return unless response.is_a? Net::HTTPSuccess
 
