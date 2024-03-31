@@ -44,7 +44,7 @@ def main():
     """Entry point"""
     volumes = []
 
-    with open("json/Berserk.json", "r", encoding="utf8") as file:
+    with open("json/Gokushufudo.json", "r", encoding="utf8") as file:
         contents = file.read()
         jayson = json.loads(contents)
         mediaid = jayson["id"]
@@ -59,6 +59,8 @@ def main():
     activities = json_dict["data"]["Page"]["activities"]
 
     results = []
+    previous_started = None
+    previous_finished = None
     for i, volume in enumerate(volumes):
         volume_start = volume["start"]
         volume_end = volume["end"]
@@ -102,7 +104,11 @@ def main():
                     finished_reading = created
 
         if started_reading is not None and finished_reading is not None:
+            previous_started = started_reading
+            previous_finished = finished_reading
             results.append({"volume": i + 1, "started_reading": started_reading, "finished_reading": finished_reading})
+        else:
+            results.append({"volume": i + 1, "started_reading": previous_started, "finished_reading": previous_finished})
 
     for r in results:
         volume = r["volume"]

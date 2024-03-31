@@ -65,8 +65,8 @@ end
 def main
     volumes = []
 
-    kaboom_id = 26
-    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Hina.json")
+    kaboom_id = 4
+    uri = URI("https://raw.githubusercontent.com/crxssed7/al3ka/main/json/Berserk.json")
     response = Net::HTTP.get_response(uri)
     return unless response.is_a? Net::HTTPSuccess
 
@@ -81,6 +81,8 @@ def main
     activities = al_json["data"]["Page"]["activities"]
 
     results = []
+    previous_started = nil
+    previous_finished = nil
     volumes.each_with_index do |volume, index|
         volume_start = volume["start"]
         volume_end = volume["end"]
@@ -131,7 +133,11 @@ def main
         end
 
         if started_reading != nil && finished_reading != nil
+            previous_started = started_reading
+            previous_finished = finished_reading
             results << {volume: index + 1, started_reading: Time.at(started_reading).utc, finished_reading: Time.at(finished_reading).utc}
+        else
+            results << {volume: index + 1, started_reading: Time.at(previous_started).utc, finished_reading: Time.at(previous_finished).utc}
         end
     end
 
