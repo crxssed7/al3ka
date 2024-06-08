@@ -65,7 +65,10 @@ def main():
     selected, action = display_select_list(files)
 
     if action == "process":
-        process(selected)
+        process_result = process(selected)
+        if process_result == "back":
+            main()
+            return
     elif action == "info":
         media_id, volumes = open_file(selected)
         last = volumes[-1]
@@ -75,15 +78,24 @@ def main():
             main()
             return
         elif info_result == "edit":
-            start, end = add_volume()
-            volumes.append({"start": int(start), "end": int(end)})
-            write_file(selected, media_id, volumes)
-            process(selected)
+            submission, start, end = add_volume()
+            if submission == "submit":
+                volumes.append({"start": int(start), "end": int(end)})
+                write_file(selected, media_id, volumes)
+                p_result = process(selected)
+                if p_result == "back":
+                    main()
+                    return
+            elif submission == "cancel":
+                main()
+                return
         elif info_result == "process":
-            process(selected)
+            p_result = process(selected)
+            if p_result == "back":
+                main()
+                return
     elif action == "quit":
         sys.exit()
-
 
 if __name__ == "__main__":
     main()

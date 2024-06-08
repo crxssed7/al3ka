@@ -8,7 +8,9 @@ def info(text):
         # Display only the portion of text that fits in the window
         lines = text.splitlines()
         for idx in range(start_line, min(start_line + h, len(lines))):
-            stdscr.addstr(idx - start_line, 0, lines[idx])
+            # Calculate the x-coordinate to center the text horizontally
+            x = w // 2 - len(lines[idx]) // 2
+            stdscr.addstr(idx - start_line, x, lines[idx])
 
         stdscr.refresh()
 
@@ -24,7 +26,7 @@ def info(text):
                 start_line -= 1
             elif key == curses.KEY_DOWN and start_line < len(text.splitlines()) - 1:
                 start_line += 1
-            elif key == curses.KEY_ENTER:
+            elif key == curses.KEY_ENTER or key in [10, 13]:
                 return "process"
             elif key == curses.KEY_BACKSPACE:
                 return "back"

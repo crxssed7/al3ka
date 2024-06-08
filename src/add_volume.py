@@ -61,14 +61,16 @@ def add_volume():
                     input2 = input2[:-1]
             elif key in (10, 13):  # Enter key
                 if current_field == 2:
-                    return input1, input2
+                    return "submit", input1, input2
                 else:
                     current_field += 1
             elif key in (curses.KEY_ENTER, ord('\n')):
                 if current_field == 2:
-                    return input1, input2
+                    return "submit", input1, input2
                 else:
                     current_field += 1
+            elif key == 27: # ESCAPE
+                return "cancel", "", ""
             else:
                 if current_field == 0:
                     input1 += chr(key)

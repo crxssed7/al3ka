@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 
 from anilist import make_anilist_request
+from info import info
 from file_operations import open_file
 
 def check_overlaps(a, b):
@@ -77,10 +78,11 @@ def process(file):
         else:
             results.append({"volume": i + 1, "started_reading": previous_started, "finished_reading": previous_finished})
 
+    output = ""
     for r in results:
         volume = r["volume"]
         finished = r["finished_reading"]
         time = datetime.utcfromtimestamp(finished).strftime("%d/%m/%Y %H:%M")
-        print(f"Volume {volume}")
-        print(f"Finished: {time}")
-        print("------------------------")
+        output += f"Volume {volume}\nFinished: {time}\n------------------------\n\n"
+
+    return info(output.strip())
