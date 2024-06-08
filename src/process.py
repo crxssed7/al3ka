@@ -1,37 +1,9 @@
-"""Convert Anilist activities to human readable format for volume start date and end date"""
-import json
+# pylint: disable=import-error
 import re
 from datetime import datetime
 
-import requests
-
-def make_anilist_request(mediaId, page = 1):
-    """Makes a request to AniList"""
-    url = "https://graphql.anilist.co"
-    query = """
-    query ($mediaId: Int, $page: Int) {
-        Page(page: $page, perPage: 500) {
-                activities(userId: 5613718, mediaId: $mediaId) {
-                ... on ListActivity {
-                    createdAt
-                    media {
-                        title {
-                            userPreferred
-                        }
-                    }
-                    status
-                    progress
-                }
-            }
-        }
-    }
-    """
-    variables = {
-        "mediaId": mediaId,
-        "page": page
-    }
-
-    return requests.post(url, json={"query": query, "variables": variables}, timeout=60)
+from anilist import make_anilist_request
+from file_operations import open_file
 
 def check_overlaps(a, b):
     """Checks for any overlaps between two arrays"""
@@ -40,15 +12,10 @@ def check_overlaps(a, b):
             return True
     return False
 
-def main():
-    """Entry point"""
+def process(file):
     volumes = []
 
-    with open("json/Gokushufudo.json", "r", encoding="utf8") as file:
-        contents = file.read()
-        jayson = json.loads(contents)
-        mediaid = jayson["id"]
-        volumes = jayson["volumes"]
+    mediaid, volumes = open_file(file)
 
     response = make_anilist_request(mediaid)
     if not response.ok:
@@ -117,6 +84,3 @@ def main():
         print(f"Volume {volume}")
         print(f"Finished: {time}")
         print("------------------------")
-
-if __name__ == "__main__":
-    main()

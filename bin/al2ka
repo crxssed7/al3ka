@@ -1,0 +1,4 @@
+#!/bin/sh -l
+
+cd $HOME/Projects/al2ka/src
+python al2ka.py
