@@ -15,7 +15,7 @@ def display_select_list(options):
         h, w = stdscr.getmaxyx()
 
         for idx in range(start_row_idx, min(start_row_idx + h - 1, len(options))):
-            row = str(options[idx]).replace(".json", "")
+            row = f"    {options[idx]}    ".replace(".json", "")
             x = w // 2 - len(row) // 2
             y = idx - start_row_idx
 
@@ -72,7 +72,7 @@ def main():
     elif action == "info":
         media_id, volumes = open_file(selected)
         last = volumes[-1]
-        text = f"{selected.replace(".json", "")}\nAmount of volumes: {len(volumes)}\nLast record: {str(last)}"
+        text = f"{selected.replace(".json", "")}\n\nAniList Id: {media_id}\nAmount of volumes: {len(volumes)}\nLast record: {str(last)}"
         info_result = info(text)
         if info_result == "back":
             main()
