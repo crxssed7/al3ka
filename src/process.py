@@ -1,5 +1,6 @@
 # pylint: disable=import-error
 import re
+import time
 from datetime import datetime
 
 from anilist import make_anilist_request
@@ -14,17 +15,26 @@ def check_overlaps(a, b):
     return False
 
 def process(file):
+    """Get the volume read dates"""
     volumes = []
 
     mediaid, volumes = open_file(file)
 
-    response = make_anilist_request(mediaid)
-    if not response.ok:
-        print(f"[ERROR] AniList returned an unsuccessful status code: {response.status_code}")
-        exit(1)
+    another_page = True
+    page = 1
+    activities = []
+    while another_page:
+        print(f"Retrieving page {page} of {mediaid}...")
+        response = make_anilist_request(mediaid, page=page)
+        if not response.ok:
+            print(f"[ERROR] AniList returned an unsuccessful status code: {response.status_code}")
+            exit(1)
 
-    json_dict = response.json()
-    activities = json_dict["data"]["Page"]["activities"]
+        json_dict = response.json()
+        activities += json_dict["data"]["Page"]["activities"]
+        page += 1
+        another_page = json_dict["data"]["Page"]["pageInfo"]["hasNextPage"]
+        time.sleep(0.5)
 
     results = []
     previous_started = None
@@ -39,17 +49,17 @@ def process(file):
             created = activity["createdAt"]
 
             # If the volume is the last volume and the activity is completed
-            if volume == volumes[-1] and activity["status"] == "completed":
-                if started_reading is None:
-                    started_reading = created
-                elif created < started_reading:
-                    started_reading = created
+            # if volume == volumes[-1] and activity["status"] == "completed":
+            #     if started_reading is None:
+            #         started_reading = created
+            #     elif created < started_reading:
+            #         started_reading = created
 
-                if finished_reading is None:
-                    finished_reading = created
-                elif created > finished_reading:
-                    finished_reading = created
-                continue
+            #     if finished_reading is None:
+            #         finished_reading = created
+            #     elif created > finished_reading:
+            #         finished_reading = created
+            #     continue
 
             if activity["status"] != "read chapter":
                 continue
@@ -82,7 +92,7 @@ def process(file):
     for r in results:
         volume = r["volume"]
         finished = r["finished_reading"]
-        time = datetime.utcfromtimestamp(finished).strftime("%d/%m/%Y %H:%M")
-        output += f"Volume {volume}\nFinished: {time}\n------------------------\n\n"
+        t = datetime.utcfromtimestamp(finished).strftime("%d/%m/%Y %H:%M")
+        output += f"Volume {volume}\nFinished: {t}\n------------------------\n\n"
 
     return info(output.strip())

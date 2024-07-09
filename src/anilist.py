@@ -6,7 +6,10 @@ def make_anilist_request(mediaId, page = 1):
     query = """
     query ($mediaId: Int, $page: Int) {
         Page(page: $page, perPage: 500) {
-                activities(userId: 5613718, mediaId: $mediaId) {
+            pageInfo {
+                hasNextPage
+            }
+            activities(userId: 5613718, mediaId: $mediaId) {
                 ... on ListActivity {
                     createdAt
                     media {
